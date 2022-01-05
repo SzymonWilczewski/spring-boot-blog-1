@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="stat(stat)" th:object="${stat}" class="grid place-items-center bg-gray-700 h-[100px] w-[200px] rounded-lg px-2 py-6">
+        <div th:text="${stat[0]}"></div>
+        <div th:text="${stat[1]}" class="text-xl font-semibold"></div>
+    </div>
+</body>
+</html>

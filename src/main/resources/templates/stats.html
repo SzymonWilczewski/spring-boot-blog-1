@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-full">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.min.css" />
+</head>
+<body class="grid grid-rows-[auto,_1fr] bg-gray-800 text-white h-full">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="grid [grid-template-columns:_repeat(auto-fit,_minmax(200px,_1fr))] auto-rows-[150px] place-content-center place-items-center gap-5 p-20">
+        <th:block th:each="stat : ${stats}">
+            <div th:replace="fragments/stat :: stat(${stat})"></div>
+        </th:block>
+    </div>
+    <div class="absolute w-full bottom-0 grid grid-cols-2 place-items-center py-6">
+        <button class="text-gray-400 hover:text-white cursor-pointer leading-8" type="button" data-modal-toggle="default-modal">
+            Import
+        </button>
+        <div id="default-modal" class="grid place-content-center hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal">
+            <div class="h-[250px] w-[350px] rounded-lg shadow bg-gray-700">
+                <div class="grid grid-cols-[auto,_56px]">
+                    <div class="text-xl text-gray-400 m-6">Import CSV</div>
+                    <button type="button" class="grid place-content-center text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm m-5 ml-0 p-1" data-modal-toggle="default-modal">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="grid place-content-center h-[174px] pb-12">
+                    <form action="/import" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file" accept=".csv" onchange="form.submit()" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a href="/export" class="text-gray-400 hover:text-white cursor-pointer leading-8">
+            Export
+        </a>
+    </div>
+    <script src="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.bundle.js"></script>
+</body>
+</html>

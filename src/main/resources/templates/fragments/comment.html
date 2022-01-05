@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="comment(comment)" th:object="${comment}" class="bg-gray-700 rounded-lg p-4">
+        <div class="grid grid-cols-[auto,_68px] mb-3">
+            <div th:text="*{username}" class="text-xl text-gray-400"></div>
+            <div class="grid grid-cols-[repeat(2,_24px)] gap-5 place-self-center">
+                <a th:href="@{/post/{id_post}/comment/{id}(id_post=${comment.id_post},id=${comment.id})}">
+                    <svg class="h-6 hover:[stroke:deepskyblue]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </a>
+                <a th:href="@{/delete/comment/{id}(id=${comment.id})}">
+                    <svg class="h-6 hover:[stroke:red]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div th:text="*{comment_content}"></div>
+    </div>
+</body>
+</html>

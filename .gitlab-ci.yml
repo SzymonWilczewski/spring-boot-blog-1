@@ -1,0 +1,50 @@
+image: gradle:alpine
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - test
+  - deploy
+
+Build:
+  stage: build
+  script:
+    - gradle build
+
+Test:
+  stage: test
+  script:
+    - gradle check
+
+#Development:
+#  image: ruby:2.4
+#  stage: deploy
+#  before_script:
+#    - gem install dpl
+#    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+#  script:
+#    - dpl --provider=heroku --app=$HEROKU_APPNAME --api-key=$HEROKU_APIKEY
+#    - export HEROKU_API_KEY=$HEROKU_APIKEY
+#    - heroku run --app $HEROKU_APPNAME migrate
+#  environment:
+#    name: development
+#    url: https://admodb-dev.herokuapp.com
+
+Production:
+  image: ruby:2.4
+  stage: deploy
+  before_script:
+    - gem install dpl
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APPNAME --api-key=$HEROKU_APIKEY
+    - export HEROKU_API_KEY=$HEROKU_APIKEY
+    - heroku run --app $HEROKU_APPNAME migrate
+  environment:
+    name: production
+    url: $HEROKU_APP_HOST

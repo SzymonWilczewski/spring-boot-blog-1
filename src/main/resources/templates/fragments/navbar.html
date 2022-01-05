@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <nav th:fragment="navbar" class="sticky top-0 w-full grid grid-cols-[120px_minmax(0,_auto)_32px] lg:grid-cols-[120px_minmax(0,_1fr)_220px] place-items-center bg-gray-700/70 backdrop-blur supports-backdrop-blur:bg-white/90 p-4 z-10">
+        <div>
+            <a href="/" class="font-semibold text-xl text-white">
+                Spring Blog
+            </a>
+        </div>
+        <div class="lg:ml-[100px]">
+            <form th:action="@{/}" class="hidden lg:block">
+                <div class="relative w-[500px]">
+                    <label class="absolute inset-y-0 left-0 items-center z-10">
+                        <select name="c" class="h-[46px] bg-transparent border border-gray-500 rounded-[0.5rem_0_0_0.5rem] block w-full p-2.5">
+                            <option class="bg-gray-600" value="p">Post</option>
+                            <option class="bg-gray-600" value="pc">Post content</option>
+                            <option class="bg-gray-600" value="t">Tag</option>
+                            <option class="bg-gray-600" value="ap">Author posts</option>
+                            <option class="bg-gray-600" value="uc">User comments</option>
+                        </select>
+                    </label>
+                    <label>
+                        <input name="f" type="text" placeholder="Search" class="bg-gray-600/60 backdrop-blur supports-backdrop-blur:bg-white/90 border border-gray-500 rounded-lg block w-full py-2.5 pl-[165px] pr-12">
+                    </label>
+                    <button class="absolute inset-y-0 right-0 items-center px-[11px]">
+                        <svg class="h-6 text-gray-400 hover:[stroke:white]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div>
+            <div class="hidden lg:block">
+                <a href="/" class="text-gray-400 hover:text-white cursor-pointer mx-3 leading-8">
+                    Posts
+                </a>
+                <a href="/authors" class="text-gray-400 hover:text-white cursor-pointer mx-3 leading-8">
+                    Authors
+                </a>
+                <a href="/stats" class="text-gray-400 hover:text-white cursor-pointer mx-3 leading-8">
+                    Stats
+                </a>
+            </div>
+            <!-- Mobile menu -->
+            <svg class="svg-button lg:hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div class="hidden mobile-menu fixed grid auto-rows-min top-[60px] inset-x-0">
+                <form th:action="@{/}">
+                    <div class="relative w-11/12 mx-auto my-3">
+                        <label class="absolute inset-y-0 left-0 items-center z-10">
+                            <select name="c" class="h-[46px] bg-transparent border border-gray-500 rounded-[0.5rem_0_0_0.5rem] block w-full p-2.5">
+                                <option class="bg-gray-600" value="p">Post</option>
+                                <option class="bg-gray-600" value="pc">Post content</option>
+                                <option class="bg-gray-600" value="t">Tag</option>
+                                <option class="bg-gray-600" value="ap">Author posts</option>
+                                <option class="bg-gray-600" value="uc">User comments</option>
+                            </select>
+                        </label>
+                        <label>
+                            <input name="f" type="text" placeholder="Search" class="bg-gray-600/60 backdrop-blur supports-backdrop-blur:bg-white/90 border border-gray-500 rounded-lg block w-full py-2.5 pl-[165px] pr-12">
+                        </label>
+                        <button class="absolute inset-y-0 right-0 items-center px-[11px]">
+                            <svg class="h-6 text-gray-400 hover:[stroke:white]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <a href="/" class="text-gray-400 hover:text-white cursor-pointer m-3 px-3 leading-8">
+                    Posts
+                </a>
+                <a href="/authors" class="text-gray-400 hover:text-white cursor-pointer m-3 px-3 leading-8">
+                    Authors
+                </a>
+                <a href="/stats" class="text-gray-400 hover:text-white cursor-pointer m-3 px-3 leading-8">
+                    Stats
+                </a>
+            </div>
+        </div>
+        <script>
+            const btn = document.querySelector(".svg-button");
+            const menu = document.querySelector(".mobile-menu");
+            const navbar = document.querySelector("nav");
+
+            btn.addEventListener("click", () => {
+                menu.classList.toggle("hidden");
+                !navbar.style.paddingBottom ? navbar.style.paddingBottom = "254px" : navbar.style.paddingBottom = "";
+            });
+        </script>
+    </nav>
+</body>
+</html>

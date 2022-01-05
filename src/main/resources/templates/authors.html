@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="grid [grid-template-columns:_repeat(auto-fit,_200px)] gap-8 place-content-center m-10">
+        <th:block th:each="author : ${authors}">
+            <div th:replace="fragments/author :: author(${author})"></div>
+        </th:block>
+    </div>
+</body>
+</html>

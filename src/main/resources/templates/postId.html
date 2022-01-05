@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="grid grid-cols-[minmax(150px,_500px)] gap-8 place-content-center m-10">
+        <div th:replace="fragments/postEditDelete :: post(${post})"></div>
+        <div>Comments:</div>
+        <form method="POST" th:action="@{/post/{id_post}(id_post=${post.id})}" th:object="${comment}" class="bg-gray-700 rounded-lg p-4">
+            <div class="text-xl text-gray-400 mb-4">Add comment</div>
+            <div class="mb-4">
+                <label for="username" class="block mb-2">Author</label>
+                <input th:field="*{username}" id="username" type="text" placeholder="Username" class="bg-gray-600 border rounded-lg block w-full p-2.5" th:classappend="${#fields.hasErrors('username')} ? 'border-red-500' : 'border-gray-500'">
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-red-600 text-xs italic mt-2"></p>
+            </div>
+            <div class="mb-4">
+                <label for="comment_content" class="block mb-2">Comment</label>
+                <textarea th:field="*{comment_content}" id="comment_content" placeholder="Leave a comment..." class="bg-gray-600 border rounded-lg block w-full p-2.5" th:classappend="${#fields.hasErrors('comment_content')} ? 'border-red-500' : 'border-gray-500'"></textarea>
+                <p th:if="${#fields.hasErrors('comment_content')}" th:errors="*{comment_content}" class="text-red-600 text-xs italic mt-2"></p>
+            </div>
+            <div class="grid grid-cols-[auto,_68px]">
+                <div></div>
+                <div class="grid grid-cols-[repeat(2,_24px)] gap-5 place-self-center mb-8">
+                    <button type="reset" class="relative">
+                        <svg class="h-8 w-8 hover:[stroke:red] absolute left-1/2 -translate-x-1/2" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <button type="submit" class="relative">
+                        <svg class="h-8 w-8 hover:[stroke:lime] absolute left-1/2 -translate-x-1/2" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <th:block th:each="comment : ${comments}">
+            <div th:replace="fragments/comment :: comment(${comment})"></div>
+        </th:block>
+    </div>
+    <script>
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+            tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput() {
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        }
+    </script>
+</body>
+</html>

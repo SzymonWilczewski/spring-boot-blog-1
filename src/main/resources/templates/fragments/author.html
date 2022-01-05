@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <a th:fragment="author(author)" th:object="${author}" th:href="@{/author/{id}/posts(id=${author.id})}" class="grid place-items-center bg-gray-700 rounded-lg p-4">
+        <div th:text="*{username}" class="text-xl text-gray-400 mb-3"></div>
+        <div th:text="*{first_name + ' ' + last_name}"></div>
+    </a>
+</body>
+</html>

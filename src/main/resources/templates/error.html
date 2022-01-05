@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-full">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="grid grid-rows-[auto,_1fr] bg-gray-800 text-white h-full">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div th:text="${message} ?: 'Page not found'" class="grid place-items-center text-5xl text-center"></div>
+</body>
+</html>

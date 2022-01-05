@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="text-base">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js"></script>
+    <style>
+        a {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        a:hover {
+            color: white;
+        }
+
+        .ui.dropdown,.menu,.item {
+            background-color: #4b5563 !important;
+            border-color: #6b7280 !important;
+        }
+
+        .item,.icon {
+            color: white !important;
+        }
+
+        .item:hover {
+            background-color: #1E90FF !important;
+        }
+
+        .selected {
+            border-top: 1px solid #6b7280 !important;
+        }
+
+        .label {
+            background-color: #374151 !important;
+            color: #9ca3af !important;
+        }
+
+        ::-webkit-file-upload-button {
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 0.875rem !important;
+            margin: 0 16px 0 -16px;
+            padding: 10px 16px 10px 32px;
+            cursor: pointer;
+        }
+
+        ::-webkit-file-upload-button:hover {
+            background-color: #4b5563;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white text-base">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="grid grid-cols-[minmax(150px,_500px)] gap-8 place-content-center m-10">
+        <form method="POST" th:action="@{/new/post}" th:object="${postForm}" class="bg-gray-700 rounded-lg p-4" enctype="multipart/form-data">
+            <div class="text-xl text-gray-400 mb-4">Add post</div>
+            <div class="mb-4">
+                <label for="authors" class="block mb-2">Authors</label>
+                <select id="authors" name="authors" multiple="" class="ui inverted fluid search three column dropdown clearable selection" th:classappend="${#fields.hasErrors('authors')} ? 'border-red-500' : 'border-gray-500'">
+                    <option th:each="author : *{authors}" th:value="${author}" th:text="${author}" th:selected="${postForm.selectedAuthors?.contains(author)}">
+                </select>
+                <p th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}" class="text-red-600 text-xs italic mt-2"></p>
+            </div>
+            <div class="mb-4">
+                <label for="post_content" class="block mb-2">Content</label>
+                <textarea th:field="*{post_content}" id="post_content" placeholder="What's on your mind?" class="bg-gray-600 border rounded-lg block w-full p-2.5" th:classappend="${#fields.hasErrors('post_content')} ? 'border-red-500' : 'border-gray-500'"></textarea>
+                <p th:if="${#fields.hasErrors('post_content')}" th:errors="*{post_content}" class="text-red-600 text-xs italic mt-2"></p>
+            </div>
+            <div class="mb-4">
+                <label for="tags" class="block mb-2">Tags</label>
+                <input th:field="*{tags}" id="tags" type="text" placeholder="Tags" class="bg-gray-600 border rounded-lg block w-full p-2.5" th:classappend="${#fields.hasErrors('tags')} ? 'border-red-500' : 'border-gray-500'">
+                <p th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}" class="text-red-600 text-xs italic mt-2"></p>
+            </div>
+            <div>
+                <label for="attachments" class="block mb-2">Files</label>
+                <input type="file" th:field="*{attachments}" id="attachments" multiple />
+            </div>
+            <div class="grid grid-cols-[auto,_68px]">
+                <div></div>
+                <div class="grid grid-cols-[repeat(2,_24px)] gap-5 place-self-center mb-8">
+                    <button type="reset" class="relative">
+                        <svg class="h-8 w-8 hover:[stroke:red] absolute left-1/2 -translate-x-1/2" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <button type="submit" class="relative">
+                        <svg class="h-8 w-8 hover:[stroke:lime] absolute left-1/2 -translate-x-1/2" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+            tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput() {
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        }
+
+        $(document).ready(function(){
+            $('.ui.dropdown')
+                .dropdown({
+                    sortSelect: true,
+                })
+            ;
+        });
+
+        window.onload = () => {
+            const multiselect = document.querySelector(".ui.dropdown,.menu,.item");
+            multiselect.classList.contains("border-red-500") ? multiselect.setAttribute('style', 'border-color: #ef4444 !important') : multiselect.setAttribute('style', 'border-color: #6b7280 !important');
+        };
+    </script>
+</body>
+</html>

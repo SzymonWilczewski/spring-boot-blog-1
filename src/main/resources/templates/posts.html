@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white">
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div id="parent" class="grid grid-cols-[minmax(150px,_500px)] gap-8 place-content-center m-10">
+        <div class="grid grid-cols-[auto,_68px] gap-3 bg-gray-700 rounded-lg p-4">
+            <a href="/new/post">
+                <label>
+                    <input type="text" placeholder="New post" class="bg-gray-600 border border-gray-500 rounded-lg block w-full cursor-pointer p-2.5">
+                </label>
+            </a>
+            <div class="grid grid-cols-[repeat(2,_24px)] gap-5 place-self-center">
+                <button>
+                    <svg id="sort_time" class="h-12 w-6 hover:[stroke:deepskyblue]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path transform="translate(0, -12)" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path transform="translate(0, 12)" id="time_up" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7l4-4m0 0l4 4m-4-4v18" />
+                        <path transform="translate(0, 12)" id="time_down" style="display: none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                    </svg>
+                </button>
+                <button>
+                    <svg id="sort_name" class="h-12 w-6 hover:[stroke:deepskyblue]" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path transform="translate(0, -12)" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                        <path transform="translate(0, 12)" id="name_up" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7l4-4m0 0l4 4m-4-4v18" />
+                        <path transform="translate(0, 12)" id="name_down" style="display: none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <th:block th:each="post : ${posts}">
+            <div th:replace="fragments/post :: post(${post})"></div>
+        </th:block>
+    </div>
+    <script>
+        let status_time = -1;
+        let status_name = -1;
+        const parent = document.getElementById("parent");
+        const first_div = parent.getElementsByTagName("div")[0];
+        const posts = Array.from(document.getElementsByClassName("post"));
+        const sort_time = document.getElementById("sort_time");
+        const sort_name = document.getElementById("sort_name");
+        sort_time.addEventListener("click", onClick, false);
+        sort_name.addEventListener("click", onClick, false);
+        const sort_time_up = document.getElementById("time_up");
+        const sort_time_down = document.getElementById("time_down");
+        const sort_name_up = document.getElementById("name_up");
+        const sort_name_down = document.getElementById("name_down");
+
+        function onClick() {
+            if (this.id === "sort_time") {
+                status_time = ~~!status_time;
+                status_name = -1;
+                sort_time.style.stroke = "deepskyblue"
+                sort_name.style.stroke = "";
+                if (status_time) {
+                    sort_time_up.style.display = "none";
+                    sort_time_down.style.display = "initial";
+                    sort_name_up.style.display = "initial";
+                    sort_name_down.style.display = "none";
+                    const sorted = posts.sort((a, b) => +b.href.match("(?<=post\\/)\\d+")[0] - +a.href.match("(?<=post\\/)\\d+")[0]);
+                    parent.innerHTML = "";
+                    parent.appendChild(first_div);
+                    for (let i = 0; i < posts.length; i++) {
+                        parent.appendChild(sorted[i]);
+                    }
+                } else {
+                    sort_time_up.style.display = "initial";
+                    sort_time_down.style.display = "none";
+                    sort_name_up.style.display = "initial";
+                    sort_name_down.style.display = "none";
+                    const sorted = posts.sort((a, b) => +a.href.match("(?<=post\\/)\\d+")[0] - +b.href.match("(?<=post\\/)\\d+")[0]);
+                    parent.innerHTML = "";
+                    parent.appendChild(first_div);
+                    for (let i = 0; i < posts.length; i++) {
+                        parent.appendChild(sorted[i]);
+                    }
+                }
+            } else {
+                status_name = ~~!status_name;
+                status_time = -1;
+                sort_time.style.stroke = ""
+                sort_name.style.stroke = "deepskyblue";
+                if (status_name) {
+                    sort_time_up.style.display = "initial";
+                    sort_time_down.style.display = "none";
+                    sort_name_up.style.display = "none";
+                    sort_name_down.style.display = "initial";
+                    const sorted = posts.sort((a, b) => b.innerText.localeCompare(a.innerText));
+                    parent.innerHTML = "";
+                    parent.appendChild(first_div);
+                    for (let i = 0; i < posts.length; i++) {
+                        parent.appendChild(sorted[i]);
+                    }
+                } else {
+                    sort_time_up.style.display = "initial";
+                    sort_time_down.style.display = "none";
+                    sort_name_up.style.display = "initial";
+                    sort_name_down.style.display = "none";
+                    const sorted = posts.sort((a, b) => a.innerText.localeCompare(b.innerText));
+                    parent.innerHTML = "";
+                    parent.appendChild(first_div);
+                    for (let i = 0; i < posts.length; i++) {
+                        parent.appendChild(sorted[i]);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

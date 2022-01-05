@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <a th:fragment="post(post)" th:object="${post}" th:href="@{/post/{id}(id=${post.id})}" class="post bg-gray-700 rounded-lg p-4">
+        <div th:text="*{post_content}"></div>
+        <div th:text="*{tags}" class="text-gray-400 [word-spacing:_10px] mt-3"></div>
+    </a>
+</body>
+</html>
